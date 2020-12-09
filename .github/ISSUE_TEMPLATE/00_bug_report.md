@@ -5,12 +5,12 @@ about: 🔧 Noticed something wrong? Let us know!
 
 ### Version Information
 
-| Software                      | Version(s) / Name |
-| ----------------------------- | ----------------- |
-| Ollivander                    |                   |
-| Wonde API                     |                   |
-| Node.js                       |                   |
-| Operating System              |                   |
+| Software         | Version(s) / Name |
+| ---------------- | ----------------- |
+| Ollivander       |                   |
+| Wonde API        |                   |
+| Node.js          |                   |
+| Operating System |                   |
 
 ### What is the expected behavior?
 
