@@ -1,6 +1,6 @@
 {
   "name": "ollivander",
-  "version": "1.0.0",
+  "version": "0.9.0",
   "description": "Wonde API client for Node.js.",
   "keywords": [
     "wonde"
