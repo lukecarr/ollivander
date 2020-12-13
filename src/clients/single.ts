@@ -37,6 +37,13 @@ export type InvokeOptions<E = undefined> = {
    * Entity relationships to include in the result.
    */
   include?: string[];
+
+  /**
+   * Additional URL parameters to add to the request made to Wonde's API.
+   */
+  searchParams?:
+    | Record<string, string | number | boolean | null | undefined>
+    | URLSearchParams;
 } & (E extends undefined
   ? // eslint-disable-next-line @typescript-eslint/ban-types
     {}
@@ -141,20 +148,30 @@ export default class OllivanderClient extends Client {
         (meta && meta.pagination && meta.pagination.next)
       ) {
         // eslint-disable-next-line no-await-in-loop
-        response = await this.got[method](meta?.pagination?.next || path, {
-          prefixUrl:
-            meta && meta.pagination && meta.pagination.next
-              ? undefined
-              : options.baseURL || "https://api.wonde.com/v1.0",
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-          searchParams: {
-            per_page: options.perPage,
-            include: options.include ? options.include.join(",") : undefined,
-          },
-          json: options.body,
-        });
+        response = await this.got[method](
+          (meta && meta.pagination && meta.pagination.next) || path,
+          {
+            prefixUrl:
+              meta && meta.pagination && meta.pagination.next
+                ? undefined
+                : options.baseURL || "https://api.wonde.com/v1.0",
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+            searchParams: {
+              ...(options && options.searchParams),
+              ...(meta && meta.pagination && meta.pagination.next
+                ? undefined
+                : {
+                    per_page: options.perPage,
+                    include: options.include
+                      ? options.include.join(",")
+                      : undefined,
+                  }),
+            },
+            json: options.body || undefined,
+          }
+        );
         const body = JSON.parse(response.body);
         meta = body.meta;
         if (data === null) {
@@ -171,16 +188,17 @@ export default class OllivanderClient extends Client {
       };
     }
     const response = await this.got[method](path, {
-      prefixUrl: options?.baseURL || "https://api.wonde.com/v1.0",
+      prefixUrl: (options && options.baseURL) || "https://api.wonde.com/v1.0",
       headers: {
         Authorization: `Bearer ${this.token}`,
       },
       searchParams: {
-        per_page: options?.perPage,
+        ...(options && options.searchParams),
+        per_page: options && options.perPage,
         include:
           options && options.include ? options.include.join(",") : undefined,
       },
-      json: options?.body,
+      json: options && options.body,
     });
     return {
       getHttpResponse: () => response,
